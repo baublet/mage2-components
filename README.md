@@ -66,9 +66,10 @@ use Rsc\Components\Base;
 
 class Link extends Base
 {
-                      // Template file, relative to Components/view/frontend/Components
+    // Template file, relative to Components/view/frontend/Components
     protected $file = 'Basic/Link.phtml';
-                      // Variables required to render this component without an exception
+
+    // Variables required to render this component without an exception
     protected $requiredVariables = ['url', 'text'];
 }
 ```
@@ -149,15 +150,14 @@ This plugin attaches a reference to the primary instance of the `ComponentManage
 
 If you prefer to configure and render your components prior to the Magento2 core template `.phtml` files, and defer it to somewhere outside of a block or template context, you can always access the component manager by injecting it via [Dependency Injection in Magento2](http://devdocs.magento.com/guides/v2.0/extension-dev-guide/build/di-xml-file.html).
 
-The alias for `Components/Model/ComponentManager.php` is `component_manager`. So you would create the following `di.xml` for your module:
+You would create the following `di.xml` for your module:
 
 ```xml
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Namespace\MyModule\MyClass">
         <arguments>
-            ...
-            <argument name="config" xsi:type="object">component_manager</argument>
-            ...
+            <!-- Other arguments for your class -->
+            <argument name="config" xsi:type="object">Rsc\Components\Model\ComponentManager</argument>
         </arguments>
     </type>
 </config>
@@ -168,3 +168,5 @@ The alias for `Components/Model/ComponentManager.php` is `component_manager`. So
 If you, for some reason, need to use a component outside of the context of Magento2, you can easily call these components by merely creating a new instance of the `Components/Model/ComponentManager()` class. This class is a factory for creating and handling the entire component library.
 
 Because we can cache certain components, however, this method is not preferred within the context of Magento2.
+
+*Suggested use case:* within a styleguide showcasing how to use and modify your Magento2 components.
