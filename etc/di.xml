@@ -4,4 +4,14 @@
             <argument name="type" xsi:type="string">component_manager</argument>
         </arguments>
     </virtualType>
+    <type name="Rsc\Components\Model\ComponentManager">
+        <arguments>
+            <argument name="CacheManager" xsi:type="object" shared="true">Rsc\Components\Cache\Memory</argument>
+        </arguments>
+    </type>
+    <type name="Rsc\Components\Observer\BlockInstantiation">
+        <arguments>
+            <argument name="ComponentManager" xsi:type="object" shared="true">Rsc\Components\Model\ComponentManager</argument>
+        </arguments>
+    </type>
 </config>
