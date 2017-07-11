@@ -2,10 +2,13 @@
 
 namespace Rsc\Components\Model;
 
+use Rsc\Components\Cache\Cache;
+
 class ComponentManager
 {
     protected $componentsPath       = null,
-              $componentNamspace    = 'Rsc\\Components\\Model\\';
+              $componentNamspace    = 'Rsc\\Components\\Model\\',
+              $cacheHandler         = null;
 
     public function __construct()
     {
@@ -13,6 +16,11 @@ class ComponentManager
         {
             $this->componentsPath = realpath(dirname(__FILE__));
         }
+    }
+
+    public function setCacheHandler(Cache $cacheHandler)
+    {
+        $this->cacheHandler = $cacheHandler;
     }
 
     protected function componentToPath($component)
@@ -37,6 +45,10 @@ class ComponentManager
 
         $component = new $componentClass();
         $component->setVariables($variables, $variables);
+        if($this->cacheHandler !== null)
+        {
+            $component->setCacheHandler($this->cacheHandler);
+        }
         return $component;
     }
 }

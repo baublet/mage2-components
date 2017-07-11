@@ -2,14 +2,17 @@
 
 namespace Rsc\Components;
 
-class Base
+use Rsc\Components\Cache\Cache;
+
+class Base implements \JsonSerializable
 {
 
     // The base directory of our view/frontend/Components directory
-    protected $baseDir = null;
-    protected $file = null;
-    protected $templatePath = null;
-    protected $variables = [];
+    protected   $baseDir = null,
+                $file = null,
+                $templatePath = null,
+                $variables = [],
+                $cacheHandler = null;
 
     // Variables required for this component to be rendered. Leave an empty
     // array if you don't want any requirements.
@@ -34,6 +37,12 @@ class Base
         $this->setFile($this->file);
     }
 
+    public function jsonSerialize()
+    {
+        return [ 'filePath' => $this->templatePath,
+                 'data' => $this->variables ];
+    }
+
     public function setDirectory($dir)
     {
         if(!file_exists($dir))
@@ -54,6 +63,41 @@ class Base
         $this->templatePath = $path;
         $this->file = $file;
         return $this;
+    }
+
+    public function setCacheHandler(Cache $cacheHandler)
+    {
+        $this->cacheHandler = $cacheHandler;
+    }
+
+    protected function hasCacheHandler()
+    {
+        return !$this->cacheHandler == null;
+    }
+
+    protected function isCached()
+    {
+        return $this->cacheHandler->has($this->cacheKey());
+    }
+
+    protected function saveCachedVersion($rendered)
+    {
+        $this->cacheHandler->set($this->cacheKey(), $rendered);
+    }
+
+    protected function cachedVersion()
+    {
+        return $this->cacheHandler->get($this->cacheKey());
+    }
+
+    /**
+     * A representation of this component's variables and values in a simplistic
+     * key form for the purposes of caching.
+     * @return string
+     */
+    protected function cacheKey()
+    {
+        return json_encode($this);
     }
 
     public function setVariables($variables)
@@ -106,9 +150,21 @@ class Base
             $this->setVariables($variables);
         }
 
+        if($this->hasCacheHandler() && $this->isCached())
+        {
+            return $this->cachedVersion();
+        }
+
         ob_start();
         $this->cleanRequire($this->templatePath, $this->variables);
-        return ob_get_clean();
+        $rendered = ob_get_clean();
+
+        if($this->hasCacheHandler())
+        {
+            $this->saveCachedVersion($rendered);
+        }
+
+        return $rendered;
     }
 
     /**
