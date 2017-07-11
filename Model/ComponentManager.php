@@ -10,11 +10,15 @@ class ComponentManager
               $componentNamspace    = 'Rsc\\Components\\Model\\',
               $cacheHandler         = null;
 
-    public function __construct()
+    public function __construct($cacheHandler = false)
     {
         if($this->componentsPath == null)
         {
             $this->componentsPath = realpath(dirname(__FILE__));
+        }
+        if($cacheHandler !== false)
+        {
+            $this->setCacheHandler($cacheHandler);
         }
     }
 
