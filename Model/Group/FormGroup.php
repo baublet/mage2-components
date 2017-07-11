@@ -7,5 +7,4 @@ class FormGroup extends Base
 {
     protected $file = 'Group/FormGroup.phtml';
     protected $requiredVariables = ['elements'];
-
 }
