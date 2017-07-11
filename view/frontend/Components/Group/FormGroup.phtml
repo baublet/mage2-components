@@ -1,0 +1,8 @@
+<div class="formGroup">
+    <?php
+        $this->echoIf($groupLabel !== null, "<h3 class=\"formGroup__label\">$groupLabel</h3>");
+        foreach($elements as $element) {
+            echo $element->render();
+        }
+    ?>
+</div>

@@ -1,0 +1,14 @@
+<?php if(isset($url) && !is_null($url)) : ?>
+    <a  href="<?php echo $url; ?>"
+        <?php $this->attrPlus('class', 'btn'); ?>
+        <?php $this->attrIf('title'); ?>
+    ><?php echo $text; ?></a>
+<?php else: ?>
+    <input
+        <?php $this->attrDefault('type', 'submit'); ?>
+        <?php $this->attrPlus('class', 'btn'); ?>
+        <?php $this->attrIf('id'); ?>
+        <?php $this->attrIf('name'); ?>
+        <?php $this->attrIf('value'); ?>
+    ><?php echo $text; ?></input>
+<?php endif;?>
